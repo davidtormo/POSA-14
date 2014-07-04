@@ -2,6 +2,8 @@ package edu.vuum.mocca;
 
 import java.lang.ref.WeakReference;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -78,6 +80,11 @@ public class DownloadActivity extends DownloadBase {
                 // bitmap that's been downloaded and returned to
                 // the DownloadActivity as a pathname who's Bundle
             	// key is defined by DownloadUtils.PATHNAME_KEY
+            	Bundle bundle = msg.getData();
+            	if (bundle != null) {
+            		String imagePath = bundle.getString(DownloadUtils.PATHNAME_KEY);
+            		activity.displayBitmap(imagePath);
+            	}
             }
     	}
     }
@@ -109,6 +116,13 @@ public class DownloadActivity extends DownloadBase {
             // returned from the makeIntent() factory method.
 
             which = "Starting DownloadIntentService";
+            Intent intent = DownloadIntentService.makeIntent
+		            		(this,
+		            		handler,
+		            		getUrlString());
+            
+            startService(intent);
+           
             break;
         
         case R.id.thread_pool_button:
@@ -117,6 +131,13 @@ public class DownloadActivity extends DownloadBase {
             // returned from the makeIntent() factory method.
 
             which = "Starting ThreadPoolDownloadService";
+            Intent intentPool = ThreadPoolDownloadService.makeIntent
+            		(this,
+            		handler,
+            		getUrlString());
+    
+            startService(intentPool);
+            
             break;
         
         }
